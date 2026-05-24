@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="MY GAME_DAY"/>
@@ -257,7 +258,11 @@ let state = {
 async function fetchScoreboard() {
   const res = await fetch(`${PROXY}/scoreboard/football/fbs`);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
+  const data = await res.json();
+  // NCAA API wraps each game: [{game:{...}}, ...] — unwrap to flat array
+  const raw = data.games || [];
+  data.games = raw.map(item => item.game || item);
+  return data;
 }
 
 async function fetchGameDetail(gameId) {
@@ -335,6 +340,7 @@ function renderScoreboard() {
   const list = document.getElementById('game-list');
   const loading = document.getElementById('scoreboard-loading');
   const statusEl = document.getElementById('scoreboard-status');
+  if (!list || !loading || !statusEl) return;
 
   if (state.isLoading && state.games.length === 0) {
     loading.classList.remove('hidden');
@@ -783,7 +789,7 @@ function setFilter(f) {
     active.classList.add('border-primary-container', 'text-primary');
     active.classList.remove('border-outline-variant', 'text-on-surface-variant');
   }
-  renderScoreboard();
+  if (document.getElementById('game-list')) renderScoreboard();
 }
 
 // =========================================================
