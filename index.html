@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="MY GAME_DAY"/>
+<title>MY GAME_DAY</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "inverse-surface": "#e5e2e1",
+          "tertiary": "#c6c6c7",
+          "on-surface": "#e5e2e1",
+          "outline": "#ab8888",
+          "on-secondary-fixed-variant": "#474747",
+          "surface-container": "#20201f",
+          "inverse-primary": "#bc0f30",
+          "secondary": "#c6c6c6",
+          "surface-container-low": "#1c1b1b",
+          "surface": "#131313",
+          "primary": "#ffb3b3",
+          "on-tertiary": "#2f3131",
+          "on-primary-container": "#ffc9c9",
+          "secondary-fixed-dim": "#c6c6c6",
+          "surface-container-lowest": "#0e0e0e",
+          "primary-fixed-dim": "#ffb3b3",
+          "on-error": "#690005",
+          "on-primary-fixed-variant": "#920021",
+          "tertiary-fixed-dim": "#c6c6c7",
+          "background": "#131313",
+          "on-background": "#e5e2e1",
+          "surface-dim": "#131313",
+          "surface-variant": "#353535",
+          "primary-fixed": "#ffdad9",
+          "on-tertiary-fixed": "#1a1c1c",
+          "inverse-on-surface": "#313030",
+          "on-error-container": "#ffdad6",
+          "error": "#ffb4ab",
+          "on-primary": "#680015",
+          "on-surface-variant": "#e4bdbd",
+          "on-primary-fixed": "#400009",
+          "primary-container": "#ba0c2f",
+          "surface-tint": "#ffb3b3",
+          "surface-container-high": "#2a2a2a",
+          "on-tertiary-fixed-variant": "#454747",
+          "surface-container-highest": "#353535",
+          "surface-bright": "#393939",
+          "tertiary-container": "#5c5d5d",
+          "on-secondary": "#303030",
+          "outline-variant": "#5b4040",
+          "on-tertiary-container": "#d6d6d6",
+          "on-secondary-fixed": "#1b1b1b",
+          "on-secondary-container": "#b5b5b5",
+          "secondary-fixed": "#e2e2e2",
+          "secondary-container": "#474747",
+          "error-container": "#93000a",
+          "tertiary-fixed": "#e2e2e2"
+        },
+        borderRadius: {
+          DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"
+        },
+        spacing: {
+          xl: "48px", md: "24px", gutter: "20px", base: "4px",
+          xs: "8px", sm: "16px", margin: "24px", lg: "32px"
+        },
+        fontFamily: {
+          "headline-md": ["Inter"], "body-lg": ["Inter"], "display-lg": ["Inter"],
+          "headline-lg-mobile": ["Inter"], "body-md": ["Inter"],
+          "score-display": ["JetBrains Mono"], "headline-lg": ["Inter"],
+          "label-caps": ["JetBrains Mono"]
+        },
+        fontSize: {
+          "headline-md": ["24px", {lineHeight:"32px", fontWeight:"700"}],
+          "body-lg": ["18px", {lineHeight:"28px", fontWeight:"400"}],
+          "display-lg": ["48px", {lineHeight:"52px", letterSpacing:"-0.02em", fontWeight:"800"}],
+          "headline-lg-mobile": ["28px", {lineHeight:"34px", fontWeight:"700"}],
+          "body-md": ["16px", {lineHeight:"24px", fontWeight:"400"}],
+          "score-display": ["36px", {lineHeight:"36px", letterSpacing:"-0.05em", fontWeight:"700"}],
+          "headline-lg": ["32px", {lineHeight:"40px", fontWeight:"700"}],
+          "label-caps": ["12px", {lineHeight:"16px", letterSpacing:"0.05em", fontWeight:"600"}]
+        }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .bento-card { background-color: #1A1A1A; border: 1px solid #262626; transition: all 0.2s ease-in-out; }
+  .bento-card:active { border-color: #BA0C2F; background-color: #262626; }
+  .pulse-red { animation: pulse-red 2s infinite; }
+  @keyframes pulse-red {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(186,12,47,0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(186,12,47,0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(186,12,47,0); }
+  }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #000; }
+  ::-webkit-scrollbar-thumb { background: #BA0C2F; border-radius: 2px; }
+  .rotate-text { writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); }
+  body { min-height: max(884px, 100dvh); padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+  .slide-up { animation: slideUp 0.3s ease-out; }
+  @keyframes slideUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+  .fade-in { animation: fadeIn 0.25s ease-out; }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  .game-card { cursor: pointer; transition: all 0.15s ease; }
+  .game-card:active { transform: scale(0.98); border-color: #BA0C2F !important; }
+  .tab-btn { transition: all 0.2s ease; }
+  .tab-btn.active { color: #ffb3b3; border-bottom-color: #ba0c2f; }
+  .play-item { border-left: 2px solid #262626; padding-left: 12px; }
+  .play-item.scoring { border-left-color: #ba0c2f; }
+  .status-live { color: #ba0c2f; }
+  .status-final { color: #c6c6c7; }
+  .status-scheduled { color: #474747; }
+  .spinner { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #toast { transition: opacity 0.3s ease; }
+</style>
+</head>
+<body class="bg-background text-on-background font-body-md flex flex-col pb-32">
+
+<!-- ===== SCREEN: SCOREBOARD ===== -->
+<div id="screen-scoreboard" class="flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="bg-surface sticky top-0 z-50 flex justify-between items-center w-full px-margin py-xs border-b border-outline-variant">
+    <div class="flex items-center gap-xs">
+      <span class="material-symbols-outlined text-primary-container" style="font-variation-settings:'FILL' 1;">sports_football</span>
+      <h1 class="font-label-caps text-[16px] font-bold tracking-widest text-on-surface">MY GAME_DAY</h1>
+    </div>
+    <div class="flex items-center gap-xs">
+      <span id="scoreboard-status" class="font-label-caps text-[10px] text-tertiary"></span>
+      <button id="refresh-btn" onclick="refreshScoreboard()" class="material-symbols-outlined text-on-surface-variant active:text-primary transition-colors text-[20px]">refresh</button>
+    </div>
+  </header>
+
+  <!-- Filter Bar -->
+  <div class="bg-surface border-b border-outline-variant px-margin py-xs flex gap-xs overflow-x-auto scrollbar-none">
+    <button onclick="setFilter('all')" id="filter-all" class="filter-btn flex-shrink-0 font-label-caps text-label-caps px-sm py-1 rounded-full border border-outline-variant text-on-surface-variant active:border-primary-container transition-all">ALL</button>
+    <button onclick="setFilter('live')" id="filter-live" class="filter-btn flex-shrink-0 font-label-caps text-label-caps px-sm py-1 rounded-full border border-outline-variant text-on-surface-variant active:border-primary-container transition-all">🔴 LIVE</button>
+    <button onclick="setFilter('uga')" id="filter-uga" class="filter-btn flex-shrink-0 font-label-caps text-label-caps px-sm py-1 rounded-full border border-outline-variant text-on-surface-variant active:border-primary-container transition-all">UGA</button>
+    <button onclick="setFilter('sec')" id="filter-sec" class="filter-btn flex-shrink-0 font-label-caps text-label-caps px-sm py-1 rounded-full border border-outline-variant text-on-surface-variant active:border-primary-container transition-all">SEC</button>
+  </div>
+
+  <!-- Game List -->
+  <main class="flex-grow px-margin py-sm" id="game-list">
+    <!-- Populated by JS -->
+    <div id="scoreboard-loading" class="flex flex-col items-center justify-center py-xl gap-sm">
+      <div class="w-8 h-8 border-2 border-primary-container border-t-transparent rounded-full spinner"></div>
+      <span class="font-label-caps text-label-caps text-tertiary">LOADING GAMES...</span>
+    </div>
+  </main>
+</div>
+
+<!-- ===== SCREEN: GAME DETAIL ===== -->
+<div id="screen-game" class="hidden flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="bg-surface sticky top-0 z-50 flex justify-between items-center w-full px-margin py-xs border-b border-outline-variant">
+    <div class="flex items-center gap-xs">
+      <button onclick="showScoreboard()" class="material-symbols-outlined text-primary active:scale-95 transition-transform">arrow_back</button>
+      <h1 class="font-label-caps text-[14px] font-bold tracking-widest text-on-surface" id="game-header-title">GAME DETAIL</h1>
+    </div>
+    <div class="flex items-center gap-xs">
+      <div id="game-live-badge" class="hidden flex items-center gap-xs">
+        <div class="w-2 h-2 rounded-full bg-primary-container pulse-red"></div>
+        <span class="font-label-caps text-label-caps text-primary-container">LIVE</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Score Hero -->
+  <section class="bg-gradient-to-b from-[#131313] to-[#000000] px-margin pt-sm pb-md border-b border-outline-variant" id="game-hero">
+    <!-- Populated by JS -->
+  </section>
+
+  <!-- Field Tracker -->
+  <div class="px-margin mb-xs mt-sm" id="field-tracker-wrap">
+    <!-- Populated by JS -->
+  </div>
+
+  <!-- Tabs -->
+  <nav class="sticky top-[56px] z-40 bg-surface border-b border-outline-variant flex">
+    <button onclick="setTab('stats')" id="tab-stats" class="tab-btn active flex-1 py-sm font-label-caps text-label-caps border-b-2 border-transparent text-center">STATS</button>
+    <button onclick="setTab('plays')" id="tab-plays" class="tab-btn flex-1 py-sm font-label-caps text-label-caps border-b-2 border-transparent text-on-surface-variant text-center">PLAYS</button>
+  </nav>
+
+  <!-- Tab Content -->
+  <main class="flex-grow" id="game-tab-content">
+    <!-- Populated by JS -->
+  </main>
+</div>
+
+<!-- Bottom Nav -->
+<footer class="fixed bottom-0 left-0 w-full z-50 bg-surface-container rounded-t-xl border-t border-outline-variant flex justify-around items-center px-gutter py-sm" style="padding-bottom: max(16px, env(safe-area-inset-bottom))">
+  <a onclick="showScoreboard()" class="flex flex-col items-center justify-center text-on-secondary-fixed-variant active:text-primary transition-all cursor-pointer" id="nav-home">
+    <span class="material-symbols-outlined">home</span>
+    <span class="font-label-caps text-label-caps mt-1">Scores</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-secondary-fixed-variant active:text-primary transition-all cursor-pointer" id="nav-live" onclick="filterLive()">
+    <span class="material-symbols-outlined">stadium</span>
+    <span class="font-label-caps text-label-caps mt-1">Live</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-secondary-fixed-variant active:text-primary transition-all cursor-pointer" onclick="showToast('Schedule coming soon')">
+    <span class="material-symbols-outlined">event</span>
+    <span class="font-label-caps text-label-caps mt-1">Schedule</span>
+  </a>
+  <a class="flex flex-col items-center justify-center text-on-secondary-fixed-variant active:text-primary transition-all cursor-pointer" onclick="showToast('Settings coming soon')">
+    <span class="material-symbols-outlined">settings</span>
+    <span class="font-label-caps text-label-caps mt-1">Settings</span>
+  </a>
+</footer>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-surface-container-high text-on-surface font-label-caps text-label-caps px-md py-xs rounded-full opacity-0 pointer-events-none z-[100] whitespace-nowrap border border-outline-variant"></div>
+
+<!-- Particle FX -->
+<div class="fixed inset-0 pointer-events-none z-[60]" id="particle-container"></div>
+
+<script>
+// =========================================================
+// CONFIG
+// =========================================================
+const PROXY = 'https://ncaa-proxy.casey-b6b.workers.dev';
+const POLL_INTERVAL = 15000; // 15 seconds
+
+const SEC_TEAMS = [
+  'georgia','alabama','lsu','florida','tennessee','auburn','mississippi',
+  'ole miss','mississippi state','arkansas','south carolina','kentucky',
+  'vanderbilt','missouri','texas a&m','texas a&m aggies','aggies'
+];
+
+// =========================================================
+// STATE
+// =========================================================
+let state = {
+  games: [],
+  filter: 'all',
+  currentGame: null,
+  currentGameId: null,
+  activeTab: 'stats',
+  pollTimer: null,
+  gameDetailTimer: null,
+  lastUpdated: null,
+  isLoading: false,
+  error: null
+};
+
+// =========================================================
+// API
+// =========================================================
+async function fetchScoreboard() {
+  const res = await fetch(`${PROXY}/scoreboard/football/fbs`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+async function fetchGameDetail(gameId) {
+  const res = await fetch(`${PROXY}/game/${gameId}/play-by-play`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+// =========================================================
+// DATA HELPERS
+// =========================================================
+function isLive(game) {
+  const s = (game.gameState || '').toLowerCase();
+  return s === 'live' || s === 'in progress' || s === 'ingame';
+}
+
+function isFinal(game) {
+  const s = (game.gameState || '').toLowerCase();
+  return s === 'final' || s === 'post';
+}
+
+function isUGA(game) {
+  const h = (game.home?.names?.short || '').toLowerCase();
+  const a = (game.away?.names?.short || '').toLowerCase();
+  return h.includes('georgia') || a.includes('georgia') ||
+         h.includes('uga') || a.includes('uga');
+}
+
+function isSEC(game) {
+  const h = (game.home?.names?.short || '').toLowerCase();
+  const a = (game.away?.names?.short || '').toLowerCase();
+  return SEC_TEAMS.some(t => h.includes(t) || a.includes(t));
+}
+
+function getStatusLabel(game) {
+  if (isLive(game)) {
+    const period = game.currentPeriod || '';
+    const clock = game.contestClock || '';
+    return clock ? `${clock} • ${period}` : period || 'LIVE';
+  }
+  if (isFinal(game)) return 'FINAL';
+  const startTime = game.startTime || game.startDate || '';
+  if (startTime) {
+    try {
+      const d = new Date(startTime);
+      return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    } catch(e) { return startTime; }
+  }
+  return 'SCHEDULED';
+}
+
+function getStatusClass(game) {
+  if (isLive(game)) return 'status-live font-bold';
+  if (isFinal(game)) return 'status-final';
+  return 'status-scheduled';
+}
+
+function getTeamLogo(team) {
+  const img = team?.logos?.[0]?.href || team?.logo || '';
+  return img;
+}
+
+function filteredGames() {
+  const { games, filter } = state;
+  if (filter === 'live') return games.filter(isLive);
+  if (filter === 'uga') return games.filter(isUGA);
+  if (filter === 'sec') return games.filter(isSEC);
+  return games;
+}
+
+// =========================================================
+// SCOREBOARD RENDER
+// =========================================================
+function renderScoreboard() {
+  const list = document.getElementById('game-list');
+  const loading = document.getElementById('scoreboard-loading');
+  const statusEl = document.getElementById('scoreboard-status');
+
+  if (state.isLoading && state.games.length === 0) {
+    loading.classList.remove('hidden');
+    return;
+  }
+  loading.classList.add('hidden');
+
+  const games = filteredGames();
+
+  if (state.lastUpdated) {
+    const t = state.lastUpdated.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    statusEl.textContent = `Updated ${t}`;
+  }
+
+  if (state.error && games.length === 0) {
+    list.innerHTML = `
+      <div class="flex flex-col items-center justify-center py-xl gap-sm">
+        <span class="material-symbols-outlined text-error text-4xl">wifi_off</span>
+        <span class="font-label-caps text-label-caps text-tertiary text-center">FAILED TO LOAD<br>Pull to retry</span>
+        <button onclick="refreshScoreboard()" class="mt-sm font-label-caps text-label-caps text-primary-container border border-primary-container px-md py-xs rounded-full active:opacity-70">RETRY</button>
+      </div>`;
+    return;
+  }
+
+  if (games.length === 0) {
+    list.innerHTML = `
+      <div class="flex flex-col items-center justify-center py-xl gap-sm">
+        <span class="material-symbols-outlined text-tertiary text-4xl">sports_football</span>
+        <span class="font-label-caps text-label-caps text-tertiary text-center">NO GAMES FOUND</span>
+      </div>`;
+    return;
+  }
+
+  // Group by status
+  const live = games.filter(isLive);
+  const final = games.filter(isFinal);
+  const scheduled = games.filter(g => !isLive(g) && !isFinal(g));
+
+  let html = '';
+  if (live.length > 0) {
+    html += `<div class="mb-sm"><span class="font-label-caps text-[10px] text-primary-container font-bold tracking-widest">🔴 LIVE NOW</span></div>`;
+    live.forEach(g => { html += renderGameCard(g); });
+  }
+  if (scheduled.length > 0) {
+    html += `<div class="mt-md mb-sm"><span class="font-label-caps text-[10px] text-tertiary tracking-widest">UPCOMING</span></div>`;
+    scheduled.forEach(g => { html += renderGameCard(g); });
+  }
+  if (final.length > 0) {
+    html += `<div class="mt-md mb-sm"><span class="font-label-caps text-[10px] text-tertiary tracking-widest">FINAL</span></div>`;
+    final.forEach(g => { html += renderGameCard(g); });
+  }
+
+  list.innerHTML = `<div class="flex flex-col gap-sm fade-in pb-24">${html}</div>`;
+}
+
+function renderGameCard(game) {
+  const home = game.home || {};
+  const away = game.away || {};
+  const homeLogo = getTeamLogo(home);
+  const awayLogo = getTeamLogo(away);
+  const homeScore = home.score ?? '';
+  const awayScore = away.score ?? '';
+  const statusLabel = getStatusLabel(game);
+  const statusClass = getStatusClass(game);
+  const live = isLive(game);
+  const gameId = game.gameID || game.id || '';
+
+  const homeShort = home.names?.short || home.abbrev || 'HOME';
+  const awayShort = away.names?.short || away.abbrev || 'AWAY';
+
+  const logoHtml = (logo, alt) => logo
+    ? `<img src="${logo}" alt="${alt}" class="w-10 h-10 object-contain" onerror="this.style.display='none'">`
+    : `<span class="material-symbols-outlined text-tertiary text-2xl" style="font-variation-settings:'FILL' 1;">sports_football</span>`;
+
+  return `
+    <div class="game-card bento-card rounded-xl p-sm" onclick="openGame('${gameId}')">
+      <div class="flex items-center justify-between">
+        <!-- Away Team -->
+        <div class="flex items-center gap-xs flex-1">
+          <div class="w-10 h-10 flex items-center justify-center">${logoHtml(awayLogo, awayShort)}</div>
+          <span class="font-label-caps text-[11px] text-on-surface font-bold">${awayShort}</span>
+        </div>
+        <!-- Score / Status -->
+        <div class="flex flex-col items-center px-sm min-w-[80px]">
+          ${homeScore !== '' && awayScore !== ''
+            ? `<div class="flex items-center gap-xs">
+                <span class="font-score-display text-[22px] text-on-surface">${awayScore}</span>
+                <span class="font-label-caps text-[10px] text-tertiary">-</span>
+                <span class="font-score-display text-[22px] text-on-surface">${homeScore}</span>
+              </div>`
+            : `<span class="font-label-caps text-[10px] text-tertiary">VS</span>`
+          }
+          <span class="font-label-caps text-[10px] mt-1 ${statusClass}">${statusLabel}</span>
+          ${live ? '<div class="w-1.5 h-1.5 rounded-full bg-primary-container pulse-red mt-1"></div>' : ''}
+        </div>
+        <!-- Home Team -->
+        <div class="flex items-center gap-xs flex-1 justify-end">
+          <span class="font-label-caps text-[11px] text-on-surface font-bold">${homeShort}</span>
+          <div class="w-10 h-10 flex items-center justify-center">${logoHtml(homeLogo, homeShort)}</div>
+        </div>
+      </div>
+      ${game.network ? `<div class="mt-xs text-center"><span class="font-label-caps text-[9px] text-tertiary">${game.network}</span></div>` : ''}
+    </div>`;
+}
+
+// =========================================================
+// GAME DETAIL
+// =========================================================
+async function openGame(gameId) {
+  if (!gameId) { showToast('Game data unavailable'); return; }
+
+  // Find game in state
+  const game = state.games.find(g => (g.gameID || g.id) === gameId);
+  if (!game) return;
+
+  state.currentGameId = gameId;
+  state.currentGame = game;
+  state.activeTab = 'stats';
+
+  document.getElementById('screen-scoreboard').classList.add('hidden');
+  document.getElementById('screen-game').classList.remove('hidden');
+  document.getElementById('screen-game').classList.add('flex', 'flex-col');
+
+  renderGameDetail(game, null);
+
+  // If live or final, fetch play-by-play
+  if (isLive(game) || isFinal(game)) {
+    try {
+      const pbp = await fetchGameDetail(gameId);
+      state.currentPbp = pbp;
+      renderGameDetail(game, pbp);
+    } catch(e) {
+      console.warn('PBP fetch failed:', e);
+      renderGameDetail(game, null);
+    }
+  }
+
+  // Poll if live
+  clearInterval(state.gameDetailTimer);
+  if (isLive(game)) {
+    state.gameDetailTimer = setInterval(async () => {
+      await refreshScoreboard(true);
+      const updated = state.games.find(g => (g.gameID || g.id) === gameId);
+      if (updated) {
+        state.currentGame = updated;
+        try {
+          const pbp = await fetchGameDetail(gameId);
+          state.currentPbp = pbp;
+          renderGameDetail(updated, pbp);
+        } catch(e) {
+          renderGameDetail(updated, state.currentPbp || null);
+        }
+      }
+    }, POLL_INTERVAL);
+  }
+}
+
+function renderGameDetail(game, pbp) {
+  const home = game.home || {};
+  const away = game.away || {};
+  const live = isLive(game);
+  const final = isFinal(game);
+
+  // Header
+  const homeShort = home.names?.short || home.abbrev || 'HOME';
+  const awayShort = away.names?.short || away.abbrev || 'AWAY';
+  document.getElementById('game-header-title').textContent = `${awayShort} @ ${homeShort}`;
+  document.getElementById('game-live-badge').classList.toggle('hidden', !live);
+
+  // Hero
+  renderHero(game, home, away, homeShort, awayShort, live, final);
+
+  // Field tracker (live only)
+  renderFieldTracker(game, pbp, homeShort, awayShort, live);
+
+  // Tab content
+  renderTabContent(game, pbp);
+}
+
+function renderHero(game, home, away, homeShort, awayShort, live, final) {
+  const homeLogo = getTeamLogo(home);
+  const awayLogo = getTeamLogo(away);
+  const homeScore = home.score ?? '--';
+  const awayScore = away.score ?? '--';
+  const statusLabel = getStatusLabel(game);
+  const statusClass = getStatusClass(game);
+
+  const logoEl = (logo, alt) => logo
+    ? `<img src="${logo}" alt="${alt}" class="w-12 h-12 object-contain" onerror="this.parentElement.innerHTML='<span class=\\'material-symbols-outlined text-tertiary text-3xl\\' style=\\'font-variation-settings:\\\"FILL\\\" 1;\\'>sports_football</span>'">`
+    : `<span class="material-symbols-outlined text-tertiary text-3xl" style="font-variation-settings:'FILL' 1;">sports_football</span>`;
+
+  const awayRank = away.rank ? `#${away.rank}` : '';
+  const homeRank = home.rank ? `#${home.rank}` : '';
+  const awayRecord = away.record || '';
+  const homeRecord = home.record || '';
+
+  document.getElementById('game-hero').innerHTML = `
+    <div class="flex justify-between items-center mb-sm">
+      <div class="flex flex-col items-center gap-xs w-1/3">
+        <div class="w-16 h-16 rounded-full bg-surface-container-high border-2 border-primary-container flex items-center justify-center p-2">
+          ${logoEl(awayLogo, awayShort)}
+        </div>
+        <span class="font-label-caps text-[11px] text-on-surface-variant font-bold">${awayShort}</span>
+        ${awayRank ? `<span class="font-label-caps text-[10px] text-primary-container">${awayRank}</span>` : ''}
+        ${awayRecord ? `<span class="font-label-caps text-[9px] text-tertiary">${awayRecord}</span>` : ''}
+      </div>
+      <div class="flex flex-col items-center w-1/3">
+        <div class="flex items-center gap-xs mb-xs">
+          <span class="font-label-caps text-label-caps ${statusClass}">${live ? 'LIVE' : (final ? 'FINAL' : 'UPCOMING')}</span>
+        </div>
+        <div class="flex items-center gap-sm">
+          <span class="font-score-display text-score-display text-on-surface">${awayScore}</span>
+          <span class="font-label-caps text-tertiary text-sm">-</span>
+          <span class="font-score-display text-score-display text-on-surface">${homeScore}</span>
+        </div>
+        <div class="mt-xs">
+          <span class="font-label-caps text-label-caps text-tertiary">${statusLabel}</span>
+        </div>
+        ${game.network ? `<span class="font-label-caps text-[9px] text-on-surface-variant mt-xs">${game.network}</span>` : ''}
+      </div>
+      <div class="flex flex-col items-center gap-xs w-1/3">
+        <div class="w-16 h-16 rounded-full bg-surface-container-high border-2 border-outline-variant flex items-center justify-center p-2">
+          ${logoEl(homeLogo, homeShort)}
+        </div>
+        <span class="font-label-caps text-[11px] text-on-surface-variant font-bold">${homeShort}</span>
+        ${homeRank ? `<span class="font-label-caps text-[10px] text-primary-container">${homeRank}</span>` : ''}
+        ${homeRecord ? `<span class="font-label-caps text-[9px] text-tertiary">${homeRecord}</span>` : ''}
+      </div>
+    </div>
+    ${(live && game.situation) ? renderSituation(game.situation) : ''}`;
+}
+
+function renderSituation(sit) {
+  if (!sit) return '';
+  const downDist = sit.shortDownDistanceText || sit.downDistanceText || '';
+  const spot = sit.possessionText || '';
+  const team = sit.possession || '';
+  return `
+    <div class="bento-card rounded-xl p-sm flex items-center gap-sm">
+      <div class="w-8 h-8 rounded-full bg-primary-container/20 border border-primary-container flex items-center justify-center">
+        <span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings:'FILL' 1;">sports_football</span>
+      </div>
+      <div>
+        <p class="font-label-caps text-[10px] text-primary-container">POSSESSION ${team ? '• ' + team.toUpperCase() : ''}</p>
+        <p class="font-body-md font-bold text-on-surface text-sm">${downDist} ${spot}</p>
+      </div>
+    </div>`;
+}
+
+function renderFieldTracker(game, pbp, homeShort, awayShort, live) {
+  const wrap = document.getElementById('field-tracker-wrap');
+  if (!live) { wrap.innerHTML = ''; return; }
+
+  const sit = game.situation || {};
+  const yardLine = sit.yardLine || 50;
+  const isHomePossession = sit.possession === (game.home?.abbrev || '').toLowerCase();
+
+  // Calculate ball position as percentage (10% to 90% of field area)
+  const pct = Math.min(90, Math.max(10, yardLine));
+  const ballLeft = isHomePossession ? (90 - pct / 100 * 80) : (10 + pct / 100 * 80);
+
+  wrap.innerHTML = `
+    <div class="bento-card rounded-xl overflow-hidden p-md">
+      <div class="flex justify-between items-center mb-sm">
+        <h3 class="font-label-caps text-label-caps text-tertiary uppercase">Field Tracker</h3>
+        <span class="font-label-caps text-[10px] text-primary-container font-bold">${sit.shortDownDistanceText || ''}</span>
+      </div>
+      <div class="relative w-full h-20 bg-surface-container-high border border-outline-variant flex items-center overflow-hidden">
+        <div class="absolute left-0 top-0 bottom-0 w-10 bg-primary-container/20 flex items-center justify-center border-r border-outline-variant/30">
+          <span class="rotate-text font-label-caps text-[9px] text-primary-container font-bold opacity-60">${awayShort}</span>
+        </div>
+        <div class="absolute right-0 top-0 bottom-0 w-10 bg-on-surface-variant/10 flex items-center justify-center border-l border-outline-variant/30">
+          <span class="rotate-text font-label-caps text-[9px] text-on-surface-variant font-bold opacity-60">${homeShort}</span>
+        </div>
+        <div class="absolute left-10 right-10 top-0 bottom-0 flex justify-between pointer-events-none">
+          ${Array(9).fill(0).map((_,i) => `<div class="h-full ${i===4?'w-0.5 bg-outline-variant':'w-px bg-outline-variant/30'}"></div>`).join('')}
+        </div>
+        <div class="absolute left-10 right-10 -bottom-1 flex justify-between px-2">
+          ${[10,20,30,40,50,40,30,20,10].map(n=>`<span class="font-label-caps text-[7px] text-tertiary">${n}</span>`).join('')}
+        </div>
+        <div class="absolute -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col items-center" style="left:${ballLeft}%">
+          <div class="w-1 h-6 bg-primary-container absolute -top-3 rounded-full"></div>
+          <div class="w-5 h-5 rounded-full bg-primary-container/20 flex items-center justify-center border border-primary-container">
+            <span class="material-symbols-outlined text-primary-container" style="font-size:12px;font-variation-settings:'FILL' 1;">sports_football</span>
+          </div>
+          <div class="w-1 h-6 bg-primary-container absolute -bottom-3 rounded-full"></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// =========================================================
+// TABS
+// =========================================================
+function setTab(tab) {
+  state.activeTab = tab;
+  document.getElementById('tab-stats').classList.toggle('active', tab === 'stats');
+  document.getElementById('tab-plays').classList.toggle('active', tab === 'plays');
+  document.getElementById('tab-stats').classList.toggle('text-on-surface-variant', tab !== 'stats');
+  document.getElementById('tab-plays').classList.toggle('text-on-surface-variant', tab !== 'plays');
+  renderTabContent(state.currentGame, state.currentPbp || null);
+}
+
+function renderTabContent(game, pbp) {
+  const el = document.getElementById('game-tab-content');
+  if (state.activeTab === 'stats') {
+    el.innerHTML = renderStats(game);
+  } else {
+    el.innerHTML = renderPlays(pbp);
+  }
+}
+
+function renderStats(game) {
+  const home = game.home || {};
+  const away = game.away || {};
+  const homeShort = home.names?.short || home.abbrev || 'HOME';
+  const awayShort = away.names?.short || away.abbrev || 'AWAY';
+
+  // Try to pull stats from NCAA API structure
+  const hStats = home.teamStats || {};
+  const aStats = away.teamStats || {};
+
+  const statRows = [
+    { label: 'TOTAL YARDS', hVal: hStats.totalYards || '--', aVal: aStats.totalYards || '--' },
+    { label: 'PASSING YDS', hVal: hStats.passingYards || '--', aVal: aStats.passingYards || '--' },
+    { label: 'RUSHING YDS', hVal: hStats.rushingYards || '--', aVal: aStats.rushingYards || '--' },
+    { label: 'FIRST DOWNS', hVal: hStats.firstDowns || '--', aVal: aStats.firstDowns || '--' },
+    { label: 'TURNOVERS', hVal: hStats.turnovers ?? '--', aVal: aStats.turnovers ?? '--' },
+    { label: 'PENALTIES', hVal: hStats.penalties || '--', aVal: aStats.penalties || '--' },
+  ];
+
+  const statHtml = statRows.map(s => {
+    const hNum = parseFloat(s.hVal);
+    const aNum = parseFloat(s.aVal);
+    const hWins = !isNaN(hNum) && !isNaN(aNum) && hNum > aNum;
+    const aWins = !isNaN(hNum) && !isNaN(aNum) && aNum > hNum;
+    return `
+      <div class="col-span-2 bento-card rounded-xl p-sm">
+        <h3 class="font-label-caps text-[10px] text-tertiary mb-xs">${s.label}</h3>
+        <div class="flex items-center justify-between">
+          <span class="font-score-display text-[20px] ${aWins ? 'text-primary-container' : 'text-on-surface'}">${s.aVal}</span>
+          <span class="font-label-caps text-[9px] text-tertiary">${awayShort} vs ${homeShort}</span>
+          <span class="font-score-display text-[20px] ${hWins ? 'text-primary-container' : 'text-on-surface'}">${s.hVal}</span>
+        </div>
+        ${(!isNaN(hNum) && !isNaN(aNum) && (hNum+aNum) > 0) ? `
+        <div class="mt-xs flex h-1.5 rounded-full overflow-hidden bg-surface-container-highest">
+          <div class="bg-primary-container transition-all" style="width:${Math.round(aNum/(hNum+aNum)*100)}%"></div>
+          <div class="bg-surface-container-highest flex-1"></div>
+        </div>` : ''}
+      </div>`;
+  }).join('');
+
+  return `<div class="p-margin grid grid-cols-2 gap-sm pb-24 fade-in">${statHtml}
+    ${game.venue ? `<div class="col-span-2 bento-card rounded-xl p-sm">
+      <p class="font-label-caps text-[10px] text-tertiary mb-xs">VENUE</p>
+      <p class="font-body-md text-on-surface text-sm">${game.venue.name || ''}</p>
+      <p class="font-label-caps text-[10px] text-tertiary">${game.venue.city || ''}, ${game.venue.state || ''}</p>
+    </div>` : ''}
+  </div>`;
+}
+
+function renderPlays(pbp) {
+  if (!pbp) {
+    return `<div class="flex flex-col items-center justify-center py-xl gap-sm">
+      <div class="w-6 h-6 border-2 border-primary-container border-t-transparent rounded-full spinner"></div>
+      <span class="font-label-caps text-label-caps text-tertiary">LOADING PLAYS...</span>
+    </div>`;
+  }
+
+  // NCAA API play-by-play structure
+  const drives = pbp.drives || pbp.periods || [];
+  if (!drives.length) {
+    return `<div class="flex flex-col items-center justify-center py-xl gap-sm">
+      <span class="material-symbols-outlined text-tertiary text-3xl">history</span>
+      <span class="font-label-caps text-label-caps text-tertiary">NO PLAY DATA AVAILABLE</span>
+    </div>`;
+  }
+
+  let allPlays = [];
+  drives.forEach(drive => {
+    const plays = drive.plays || drive.playStats || [];
+    plays.forEach(play => {
+      allPlays.push({
+        text: play.playDescription || play.description || play.text || '',
+        period: play.period?.number || play.period || drive.period || '',
+        clock: play.clock?.displayValue || play.clock || '',
+        scoring: play.scoringPlay || play.isScoring || false,
+        homeScore: play.homeScore ?? '',
+        awayScore: play.awayScore ?? '',
+        type: play.type?.text || play.playType || ''
+      });
+    });
+  });
+
+  // Reverse for most-recent-first
+  allPlays = allPlays.reverse();
+
+  if (!allPlays.length) {
+    return `<div class="flex flex-col items-center py-xl gap-sm items-center justify-center">
+      <span class="font-label-caps text-label-caps text-tertiary">NO PLAYS YET</span>
+    </div>`;
+  }
+
+  const playsHtml = allPlays.slice(0, 100).map(p => `
+    <div class="play-item ${p.scoring ? 'scoring' : ''} py-xs">
+      <div class="flex justify-between items-start mb-1">
+        <span class="font-label-caps text-[9px] text-tertiary">${p.period ? 'Q'+p.period : ''} ${p.clock || ''}</span>
+        ${p.scoring ? '<span class="font-label-caps text-[9px] text-primary-container font-bold">● SCORE</span>' : ''}
+        ${(p.homeScore !== '' && p.awayScore !== '') ? `<span class="font-label-caps text-[9px] text-tertiary">${p.awayScore}-${p.homeScore}</span>` : ''}
+      </div>
+      <p class="font-body-md text-on-surface text-sm leading-snug">${p.text || p.type || '—'}</p>
+    </div>`).join('');
+
+  return `<div class="px-margin py-sm pb-24 fade-in flex flex-col gap-xs">${playsHtml}</div>`;
+}
+
+// =========================================================
+// NAVIGATION
+// =========================================================
+function showScoreboard() {
+  clearInterval(state.gameDetailTimer);
+  state.currentGame = null;
+  state.currentGameId = null;
+  state.currentPbp = null;
+  document.getElementById('screen-game').classList.add('hidden');
+  document.getElementById('screen-game').classList.remove('flex', 'flex-col');
+  document.getElementById('screen-scoreboard').classList.remove('hidden');
+}
+
+function filterLive() {
+  showScoreboard();
+  setFilter('live');
+}
+
+// =========================================================
+// FILTERS
+// =========================================================
+function setFilter(f) {
+  state.filter = f;
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.remove('border-primary-container', 'text-primary');
+    btn.classList.add('border-outline-variant', 'text-on-surface-variant');
+  });
+  const active = document.getElementById('filter-' + f);
+  if (active) {
+    active.classList.add('border-primary-container', 'text-primary');
+    active.classList.remove('border-outline-variant', 'text-on-surface-variant');
+  }
+  renderScoreboard();
+}
+
+// =========================================================
+// DATA FETCHING
+// =========================================================
+async function refreshScoreboard(silent = false) {
+  if (!silent) state.isLoading = true;
+  state.error = null;
+
+  try {
+    const data = await fetchScoreboard();
+    state.games = data.games || [];
+    state.lastUpdated = new Date();
+    state.isLoading = false;
+    if (!state.currentGame) renderScoreboard();
+  } catch(e) {
+    console.error('Scoreboard fetch error:', e);
+    state.error = e.message;
+    state.isLoading = false;
+    if (!state.currentGame) renderScoreboard();
+  }
+}
+
+function startPolling() {
+  clearInterval(state.pollTimer);
+  state.pollTimer = setInterval(() => {
+    if (!state.currentGame) refreshScoreboard(true);
+  }, POLL_INTERVAL);
+}
+
+// =========================================================
+// TOAST
+// =========================================================
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.style.opacity = '0'; }, 2500);
+}
+
+// =========================================================
+// PARTICLES
+// =========================================================
+function initParticles() {
+  const container = document.getElementById('particle-container');
+  for (let i = 0; i < 12; i++) {
+    const dot = document.createElement('div');
+    dot.style.cssText = `position:absolute;width:2px;height:2px;background:rgba(186,12,47,0.25);border-radius:50%;top:${Math.random()*100}vh;left:${Math.random()*100}vw;`;
+    const dur = 12 + Math.random() * 18;
+    const delay = -Math.random() * dur;
+    dot.style.animation = `floatDot ${dur}s linear ${delay}s infinite`;
+    container.appendChild(dot);
+  }
+  const s = document.createElement('style');
+  s.textContent = `@keyframes floatDot{0%{transform:translate(0,0) scale(1);opacity:0}20%{opacity:0.4}80%{opacity:0.15}100%{transform:translate(${Math.random()*80-40}px,-100vh) scale(0);opacity:0}}`;
+  document.head.appendChild(s);
+}
+
+// =========================================================
+// INIT
+// =========================================================
+document.addEventListener('DOMContentLoaded', () => {
+  setFilter('all');
+  initParticles();
+  refreshScoreboard();
+  startPolling();
+});
+</script>
+</body>
+</html>
